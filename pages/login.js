@@ -18,27 +18,20 @@ import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
 import {
-  auth,
   logInWithEmailAndPassword,
   signInWithGoogle,
   registerWithEmailAndPassword,
 } from "../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 
 
 function Login() {
-  const [error] = useAuthState(auth);
-  const [errorOpen, errorClose] = useState(false);
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setConfirmPassword] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-
-  // passwordMatch = () => password === passwordConfirm;
-  // setHidePassword(hidePassword => !hidePassword);
 
 
   return (
@@ -109,6 +102,7 @@ function Login() {
                     Password
                   </InputLabel>
                   <Input
+                    required
                     type={hidePassword ? 'password' : 'input'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -140,15 +134,32 @@ function Login() {
                   </InputLabel>
                   <Input
                     required
-                    type="password"
+                    type={hidePassword ? 'password' : 'input'}
                     value={passwordConfirm}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm Password"
+                    endAdornment={
+                      hidePassword ? (
+                        <InputAdornment position="end">
+                          <VisibilityOffTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(false)}
+                          />
+                        </InputAdornment>
+                      ) : (
+                        <InputAdornment position="end">
+                          <VisibilityTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(true)}
+                          />
+                        </InputAdornment>
+                      )
+                    }
                   />
                 </FormControl>
 
                 <Button
-                  onClick={registerWithEmailAndPassword(
+                  onClick={() => registerWithEmailAndPassword(
                     email, password
                   )}>
                   Register
@@ -176,7 +187,7 @@ function Login() {
                     Email
                   </InputLabel>
                   <Input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="E-mail Address"
@@ -213,7 +224,7 @@ function Login() {
                   />
                 </FormControl>
                 <Button
-                  onClick={logInWithEmailAndPassword(
+                  onClick={() => logInWithEmailAndPassword(
                     email, password
                   )}
                 >
@@ -275,7 +286,7 @@ const ModalContainer = styled.div`
   background: white;
   width: 500px;
   height: 600px;
-  border-radius: 15px;
+  border-radius: 2px;
   padding: 15px;
 `;
 const ModalOverlay = styled.div`
@@ -290,5 +301,8 @@ const ModalOverlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 const Form = styled.form`
-  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
 `;
