@@ -1,13 +1,8 @@
-import { useEffect, useState } from "react";
-import Head from 'next/head';
+import { useState } from 'react';
 import styled from 'styled-components';
 import {
   Button,
-  Grid,
-  TextField,
-  FormControlLabel,
   FormControl,
-  FormLabel,
   Input,
   InputLabel,
 
@@ -18,62 +13,18 @@ import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
 import {
-  logInWithEmailAndPassword,
-  signInWithGoogle,
   registerWithEmailAndPassword,
 } from "../firebase";
 
-
-
-function Login() {
+const RegistrationForm = () => {
   const [name, setName ] = useState('');
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
-  const [passwordConfirm, setConfirmPassword] = useState(false);
-  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [passwordConfirm, setConfirmPassword] = useState('');
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-
-
   return (
-    <Container>
-      <Head>
-        <title>Login</title>
-      </Head>
-      <LoginContainer>
-        <Logo
-          src='favicon.ico'
-        />
-        <Button
-          onClick={signInWithGoogle}
-          variant='outlined'
-        >
-          Sign in with Google
-        </Button>
-        <Button
-          onClick={() => setShowLoginForm(true)}
-          variant='outlined'
-        >
-          Sign in with Email and Password
-        </Button>
-      </LoginContainer>
-      <RegisterContainer>
-        <h2>Not Registered?</h2>
-        <Button
-          onClick={() => setShowRegistrationForm(true)}
-          variant='outlined'
-        >
-          Register with Email and Password
-        </Button>
-        <Button
-          onClick={() => signInWithGoogle}
-          variant='outlined'
-        >
-          Register with Google
-        </Button>
-      </RegisterContainer>
-      {showRegistrationForm === true &&
-        <ModalOverlay>
+    <ModalOverlay>
           <ModalContainer>
             <ModalHeader>
               <a href="#" onClick={() => setShowRegistrationForm(false)}>
@@ -184,109 +135,10 @@ function Login() {
             </ModalBody>
           </ModalContainer>
         </ModalOverlay>
-      }
-      {showLoginForm === true &&
-        <ModalOverlay>
-          <ModalContainer>
-            <ModalHeader>
-              <a href="#" onClick={() => setShowLoginForm(false)}>
-                <CloseIcon />
-              </a>
-            </ModalHeader>
-            <h2>Login</h2>
-            <ModalBody>
-              <Form>
-                <FormControl>
-                  <InputLabel
-                    htmlFor="email"
-                  >
-                    Email
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="E-mail Address"
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel
-                    htmlFor="password"
-                  >
-                    Password
-                  </InputLabel>
-                  <Input
-                    type={hidePassword ? 'password' : 'input'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    endAdornment={
-                      hidePassword ? (
-                        <InputAdornment position="end">
-                          <VisibilityOffTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(false)}
-                          />
-                        </InputAdornment>
-                      ) : (
-                        <InputAdornment position="end">
-                          <VisibilityTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(true)}
-                          />
-                        </InputAdornment>
-                      )
-                    }
-                  />
-                </FormControl>
-                <Button
-                  onClick={() => logInWithEmailAndPassword(
-                    email, password
-                  )}
-                >
-                  Log In
-                </Button>
-              </Form>
-            </ModalBody>
-          </ModalContainer>
-        </ModalOverlay>
-      }
-    </Container>
   )
 }
 
-export default Login
-
-const Container = styled.div`
-  display: grid;
-  place-items: center;
-  height: 100vh;
-  background-color: whitesmoke;
-`;
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 100px;
-  align-items: center;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0px 4px 14px -3px rgba(0, 0, 0, 0.7);
-`;
-const RegisterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  align-items: center;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0px 4px 14px -3px rgba(0, 0, 0, 0.7);
-`;
-const Logo = styled.img`
-  height: 200px;
-  width: 200px;
-  margin-bottom: 50px;
-`;
-
+export default RegistrationForm
 
 const ModalBody = styled.div`
   padding-top: 10px;
