@@ -26,6 +26,7 @@ import {
 
 
 function Login() {
+  const [name, setName ] = useState('');
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
@@ -82,6 +83,19 @@ function Login() {
             <h2>Register</h2>
             <ModalBody>
               <Form>
+              <FormControl>
+                  <InputLabel
+                    htmlFor="name"
+                  >
+                    Username
+                  </InputLabel>
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Username"
+                  />
+                </FormControl>
                 <FormControl>
                   <InputLabel
                     htmlFor="email"
@@ -160,7 +174,9 @@ function Login() {
 
                 <Button
                   onClick={() => registerWithEmailAndPassword(
-                    email, password
+                    name,
+                    email, 
+                    password
                   )}>
                   Register
                 </Button>
