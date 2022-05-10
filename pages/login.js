@@ -1,28 +1,229 @@
+import { useEffect, useState } from "react";
 import Head from 'next/head';
 import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import { auth, provider, signInWithPopup } from '../firebase';
+import {
+  Button,
+  Grid,
+  TextField,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Input,
+  InputLabel,
+
+} from '@material-ui/core';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ErrorIcon from "@material-ui/icons/Error";
+import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
+import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
+import CloseIcon from "@material-ui/icons/Close";
+import {
+  auth,
+  logInWithEmailAndPassword,
+  signInWithGoogle,
+  registerWithEmailAndPassword,
+} from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+
 
 function Login() {
-  const signIn = () => {
-    signInWithPopup(auth, provider).catch(alert)
-  }
+  const [error] = useAuthState(auth);
+  const [errorOpen, errorClose] = useState(false);
+  const [email, setEmail] = useState('');
+  const [hidePassword, setHidePassword] = useState(true);
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setConfirmPassword] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+
+  // passwordMatch = () => password === passwordConfirm;
+  // setHidePassword(hidePassword => !hidePassword);
+
+
   return (
     <Container>
       <Head>
         <title>Login</title>
       </Head>
       <LoginContainer>
-        <Logo 
+        <Logo
           src='favicon.ico'
         />
         <Button
-          onClick={signIn}
+          onClick={signInWithGoogle}
           variant='outlined'
         >
           Sign in with Google
         </Button>
+        <Button
+          onClick={() => setShowLoginForm(true)}
+          variant='outlined'
+        >
+          Sign in with Email and Password
+        </Button>
       </LoginContainer>
+      <RegisterContainer>
+        <h2>Not Registered?</h2>
+        <Button
+          onClick={() => setShowRegistrationForm(true)}
+          variant='outlined'
+        >
+          Register with Email and Password
+        </Button>
+        <Button
+          onClick={signInWithGoogle}
+          variant='outlined'
+        >
+          Register with Google
+        </Button>
+      </RegisterContainer>
+      {showRegistrationForm === true &&
+        <ModalOverlay>
+          <ModalContainer>
+            <ModalHeader>
+              <a href="#" onClick={() => setShowRegistrationForm(false)}>
+                <CloseIcon />
+              </a>
+            </ModalHeader>
+            <h2>Register</h2>
+            <ModalBody>
+              <Form>
+                <FormControl>
+                  <InputLabel
+                    htmlFor="email"
+                  >
+                    Email
+                  </InputLabel>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="E-mail Address"
+                  />
+                </FormControl>
+                <FormControl>
+                  <InputLabel
+                    htmlFor="password"
+                  >
+                    Password
+                  </InputLabel>
+                  <Input
+                    type={hidePassword ? 'password' : 'input'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    endAdornment={
+                      hidePassword ? (
+                        <InputAdornment position="end">
+                          <VisibilityOffTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(false)}
+                          />
+                        </InputAdornment>
+                      ) : (
+                        <InputAdornment position="end">
+                          <VisibilityTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(true)}
+                          />
+                        </InputAdornment>
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormControl>
+                  <InputLabel
+                    htmlFor="passwordConfirm"
+                  >
+                    Confirm Password
+                  </InputLabel>
+                  <Input
+                    required
+                    type="password"
+                    value={passwordConfirm}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                  />
+                </FormControl>
+
+                <Button
+                  onClick={registerWithEmailAndPassword(
+                    email, password
+                  )}>
+                  Register
+                </Button>
+              </Form>
+            </ModalBody>
+          </ModalContainer>
+        </ModalOverlay>
+      }
+      {showLoginForm === true &&
+        <ModalOverlay>
+          <ModalContainer>
+            <ModalHeader>
+              <a href="#" onClick={() => setShowLoginForm(false)}>
+                <CloseIcon />
+              </a>
+            </ModalHeader>
+            <h2>Login</h2>
+            <ModalBody>
+              <Form>
+                <FormControl>
+                  <InputLabel
+                    htmlFor="email"
+                  >
+                    Email
+                  </InputLabel>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="E-mail Address"
+                  />
+                </FormControl>
+                <FormControl>
+                  <InputLabel
+                    htmlFor="password"
+                  >
+                    Password
+                  </InputLabel>
+                  <Input
+                    type={hidePassword ? 'password' : 'input'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    endAdornment={
+                      hidePassword ? (
+                        <InputAdornment position="end">
+                          <VisibilityOffTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(false)}
+                          />
+                        </InputAdornment>
+                      ) : (
+                        <InputAdornment position="end">
+                          <VisibilityTwoToneIcon
+                            fontSize="default"
+                            onClick={() => setHidePassword(true)}
+                          />
+                        </InputAdornment>
+                      )
+                    }
+                  />
+                </FormControl>
+                <Button
+                  onClick={logInWithEmailAndPassword(
+                    email, password
+                  )}
+                >
+                  Log In
+                </Button>
+              </Form>
+            </ModalBody>
+          </ModalContainer>
+        </ModalOverlay>
+      }
     </Container>
   )
 }
@@ -44,8 +245,50 @@ const LoginContainer = styled.div`
   border-radius: 5px;
   box-shadow: 0px 4px 14px -3px rgba(0, 0, 0, 0.7);
 `;
+const RegisterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  align-items: center;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 4px 14px -3px rgba(0, 0, 0, 0.7);
+`;
 const Logo = styled.img`
   height: 200px;
   width: 200px;
   margin-bottom: 50px;
+`;
+
+
+const ModalBody = styled.div`
+  padding-top: 10px;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 25px;
+`;
+
+const ModalContainer = styled.div`
+  background: white;
+  width: 500px;
+  height: 600px;
+  border-radius: 15px;
+  padding: 15px;
+`;
+const ModalOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+const Form = styled.form`
+  width: 100%;
 `;

@@ -1,18 +1,21 @@
+import { useEffect } from 'react';
 import '../styles/globals.css'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
 import Login from './login';
 import Loading from '../components/Loading';
-import firebase from 'firebase';
+import { serverTimestamp, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 
 function MyApp({ Component, pageProps }) {
-  const [user, loading] = useAuthState(auth);
-
+  const [user, loading, error] = useAuthState(auth);
+  console.log(useAuthState(auth));
+  
   useEffect(() => {
     if (user) {
-      db.collection('users').doc(user.uid).set({
+      const userRef = collection(db, 'users');
+      setDoc(doc(userRef, user.uid), {
         email: user.email,
-        lastSeen: firebase.firestore.FieldValue.serverTimeStamp(),
+        lastSeen: serverTimestamp(),
         photoURL: user.photoURL 
       }, { merge: true });
     }
