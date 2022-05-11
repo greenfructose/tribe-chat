@@ -9,20 +9,20 @@ import { serverTimestamp, collection, doc, getDoc, setDoc } from 'firebase/fires
 function MyApp({ Component, pageProps }) {
   const [user, loading, error] = useAuthState(auth);
   console.log(useAuthState(auth));
-  
+
   useEffect(() => {
     if (user) {
       const userRef = collection(db, 'users');
       setDoc(doc(userRef, user.uid), {
         email: user.email,
         lastSeen: serverTimestamp(),
-        photoURL: user.photoURL 
+        photoURL: user.photoURL
       }, { merge: true });
     }
   }, [user])
-  
 
-  if(loading) return <Loading />
+
+  if (loading) return <Loading />
 
   if (!user) return <Login />
 

@@ -10,7 +10,7 @@ export default function Home() {
         <meta name="description" content="TribeChat Communications App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Sidebar/>
+      <Sidebar />
     </div>
   )
 }

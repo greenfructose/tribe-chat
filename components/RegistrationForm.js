@@ -17,7 +17,7 @@ import {
 } from "../firebase";
 
 const RegistrationForm = () => {
-  const [name, setName ] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
@@ -25,116 +25,116 @@ const RegistrationForm = () => {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   return (
     <ModalOverlay>
-          <ModalContainer>
-            <ModalHeader>
-              <a href="#" onClick={() => setShowRegistrationForm(false)}>
-                <CloseIcon />
-              </a>
-            </ModalHeader>
-            <h2>Register</h2>
-            <ModalBody>
-              <Form>
-              <FormControl>
-                  <InputLabel
-                    htmlFor="name"
-                  >
-                    Username
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Username"
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel
-                    htmlFor="email"
-                  >
-                    Email
-                  </InputLabel>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="E-mail Address"
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel
-                    htmlFor="password"
-                  >
-                    Password
-                  </InputLabel>
-                  <Input
-                    required
-                    type={hidePassword ? 'password' : 'input'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    endAdornment={
-                      hidePassword ? (
-                        <InputAdornment position="end">
-                          <VisibilityOffTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(false)}
-                          />
-                        </InputAdornment>
-                      ) : (
-                        <InputAdornment position="end">
-                          <VisibilityTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(true)}
-                          />
-                        </InputAdornment>
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel
-                    htmlFor="passwordConfirm"
-                  >
-                    Confirm Password
-                  </InputLabel>
-                  <Input
-                    required
-                    type={hidePassword ? 'password' : 'input'}
-                    value={passwordConfirm}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm Password"
-                    endAdornment={
-                      hidePassword ? (
-                        <InputAdornment position="end">
-                          <VisibilityOffTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(false)}
-                          />
-                        </InputAdornment>
-                      ) : (
-                        <InputAdornment position="end">
-                          <VisibilityTwoToneIcon
-                            fontSize="default"
-                            onClick={() => setHidePassword(true)}
-                          />
-                        </InputAdornment>
-                      )
-                    }
-                  />
-                </FormControl>
+      <ModalContainer>
+        <ModalHeader>
+          <a href="#" onClick={() => setShowRegistrationForm(false)}>
+            <CloseIcon />
+          </a>
+        </ModalHeader>
+        <h2>Register</h2>
+        <ModalBody>
+          <Form>
+            <FormControl>
+              <InputLabel
+                htmlFor="name"
+              >
+                Username
+              </InputLabel>
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Username"
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel
+                htmlFor="email"
+              >
+                Email
+              </InputLabel>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="E-mail Address"
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel
+                htmlFor="password"
+              >
+                Password
+              </InputLabel>
+              <Input
+                required
+                type={hidePassword ? 'password' : 'input'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                endAdornment={
+                  hidePassword ? (
+                    <InputAdornment position="end">
+                      <VisibilityOffTwoToneIcon
+                        fontSize="default"
+                        onClick={() => setHidePassword(false)}
+                      />
+                    </InputAdornment>
+                  ) : (
+                    <InputAdornment position="end">
+                      <VisibilityTwoToneIcon
+                        fontSize="default"
+                        onClick={() => setHidePassword(true)}
+                      />
+                    </InputAdornment>
+                  )
+                }
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel
+                htmlFor="passwordConfirm"
+              >
+                Confirm Password
+              </InputLabel>
+              <Input
+                required
+                type={hidePassword ? 'password' : 'input'}
+                value={passwordConfirm}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                endAdornment={
+                  hidePassword ? (
+                    <InputAdornment position="end">
+                      <VisibilityOffTwoToneIcon
+                        fontSize="default"
+                        onClick={() => setHidePassword(false)}
+                      />
+                    </InputAdornment>
+                  ) : (
+                    <InputAdornment position="end">
+                      <VisibilityTwoToneIcon
+                        fontSize="default"
+                        onClick={() => setHidePassword(true)}
+                      />
+                    </InputAdornment>
+                  )
+                }
+              />
+            </FormControl>
 
-                <Button
-                  onClick={() => registerWithEmailAndPassword(
-                    name,
-                    email, 
-                    password
-                  )}>
-                  Register
-                </Button>
-              </Form>
-            </ModalBody>
-          </ModalContainer>
-        </ModalOverlay>
+            <Button
+              onClick={() => registerWithEmailAndPassword(
+                name,
+                email,
+                password
+              )}>
+              Register
+            </Button>
+          </Form>
+        </ModalBody>
+      </ModalContainer>
+    </ModalOverlay>
   )
 }
 

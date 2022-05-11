@@ -1,31 +1,31 @@
-import { Avatar, IconButton, Button } from '@material-ui/core';
+import {
+  Avatar,
+  IconButton,
+  Button,
+} from '@material-ui/core';
 import styled from 'styled-components';
 import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import * as EmailValidator from 'email-validator';
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db, logout } from '../firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import {
+  auth,
+  db,
+  logout,
+} from '../firebase';
+import {
+  addDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  docs,
+} from 'firebase/firestore';
+import { arraysAreEqual } from '../utils/arrayUtils';
 
 function Sidebar() {
   const [user] = useAuthState(auth);
-  const createChat = () => {
-    const input = prompt(
-      'Please enter an email address for the user you wish to chat with'
-    );
-
-    if (!input) return null;
-
-    if (EmailValidator.validate(input) && input != user.email) {
-      addDoc(collection(db, 'chats'), {
-        users: [user.email, input]
-      });
-    }
-  };
-
-  const chatAlreadyExists = (recipientEmail) => {}
-
   return (
     <Container>
       <Header>
@@ -43,7 +43,7 @@ function Sidebar() {
         <SearchIcon />
         <SearchInput placeholder='Search in chats' />
       </Search>
-      <SidebarButton onClick={createChat}>
+      <SidebarButton onClick={() => createChat(db, user)}>
         Start a new chat
       </SidebarButton>
     </Container>
@@ -92,3 +92,54 @@ const SidebarButton = styled(Button)`
     border-bottom: 1px solid whitesmoke;
   } 
 `;
+
+const createChat = async (db, user) => {
+  const input = prompt(
+    'Please enter email addresses seperated by spaces for users you wish to chat with'
+  );
+
+  if (!input) return null;
+
+  const emailArray = input.split(' ');
+  let validatedEmailArray = [];
+
+  for (let i = 0; i < emailArray.length; i++) {
+    if (EmailValidator.validate(emailArray[i])
+      && emailArray[i] !== user.email) {
+      if (!validatedEmailArray.includes(emailArray[i])) {
+        console.log(`${emailArray[i]} not in validated array, pushing now`)
+        validatedEmailArray.push(emailArray[i])
+      }
+    }
+  }
+  console.log(`Getting chats`)
+  await getChats(db, user).then((chatsSnapshot) => {
+    validatedEmailArray.push(user.email)
+    chatAlreadyExists(validatedEmailArray, chatsSnapshot).then((chatExists) => {
+      console.log(`Chat Exists: ${chatExists}`)
+      if (!chatExists) {
+        console.log(`Adding chat now`)
+        addDoc(collection(db, 'chats'), {
+          creator: user.uid,
+          users: validatedEmailArray
+        });
+      }
+    });
+  });
+};
+
+
+const chatAlreadyExists = async (chatUsers, chatsSnapshot) => {
+  let result = false;
+  chatsSnapshot.forEach((doc) => {
+    if (arraysAreEqual(doc.data().users, chatUsers)) {
+      result = true;
+    }
+  })
+  return result;
+};
+
+const getChats = async (db, user) => {
+  const q = query(collection(db, 'chats'), where('creator', '==', user.uid))
+  return await getDocs(q)
+}; 

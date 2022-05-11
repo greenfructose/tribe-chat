@@ -26,7 +26,7 @@ import {
 
 
 function Login() {
-  const [name, setName ] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
@@ -83,7 +83,7 @@ function Login() {
             <h2>Register</h2>
             <ModalBody>
               <Form>
-              <FormControl>
+                <FormControl>
                   <InputLabel
                     htmlFor="name"
                   >
@@ -175,7 +175,7 @@ function Login() {
                 <Button
                   onClick={() => registerWithEmailAndPassword(
                     name,
-                    email, 
+                    email,
                     password
                   )}>
                   Register

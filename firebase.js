@@ -19,7 +19,6 @@ import {
   serverTimestamp
 } from "firebase/firestore";
 
-
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
@@ -48,7 +47,7 @@ const signInWithGoogle = async () => {
         email: user.email,
         lastSeen: serverTimestamp()
       });
-    } 
+    }
   } catch (err) {
     console.error(err);
     alert(err.message);
@@ -93,6 +92,9 @@ const sendPasswordReset = async (email) => {
 const logout = () => {
   signOut(auth);
 };
+
+
+
 
 export {
   auth,
