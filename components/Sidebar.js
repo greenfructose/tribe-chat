@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Avatar,
   IconButton,
@@ -23,9 +24,19 @@ import {
   docs,
 } from 'firebase/firestore';
 import { arraysAreEqual } from '../utils/arrayUtils';
+import Chat from '../components/Chat';
 
 function Sidebar() {
   const [user] = useAuthState(auth);
+  const [chatsSnapshot, setChatsSnapshot] = useState(null);
+  useEffect(() => {
+    async function getChatsSnapshot(){
+      const chatsSnapshot = await getChats(db, user);
+      setChatsSnapshot(chatsSnapshot);
+    }
+    getChatsSnapshot();
+  }, [user])
+  console.log(chatsSnapshot)
   return (
     <Container>
       <Header>
@@ -46,6 +57,9 @@ function Sidebar() {
       <SidebarButton onClick={() => createChat(db, user)}>
         Start a new chat
       </SidebarButton>
+      {chatsSnapshot?.docs.map((chat) => (
+        <Chat key={chat.id} id={chat.id} emails={chat.data().users} />
+      ))}
     </Container>
   );
 }
@@ -116,7 +130,6 @@ const createChat = async (db, user) => {
   await getChats(db, user).then((chatsSnapshot) => {
     validatedEmailArray.push(user.email)
     chatAlreadyExists(validatedEmailArray, chatsSnapshot).then((chatExists) => {
-      console.log(`Chat Exists: ${chatExists}`)
       if (!chatExists) {
         console.log(`Adding chat now`)
         addDoc(collection(db, 'chats'), {
