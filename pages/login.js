@@ -30,7 +30,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [password, setPassword] = useState('');
-  const [passwordConfirm, setConfirmPassword] = useState(false);
+  const [passwordConfirm, setConfirmPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
@@ -66,7 +66,7 @@ function Login() {
           Register with Email and Password
         </Button>
         <Button
-          onClick={() => signInWithGoogle}
+          onClick={signInWithGoogle}
           variant='outlined'
         >
           Register with Google

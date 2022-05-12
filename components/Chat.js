@@ -14,6 +14,7 @@ import {
   getDocs,
   docs,
 } from 'firebase/firestore';
+import ChatHeads from '../components/ChatHeads';
 
 
 function Chat({ id, emails }) {
@@ -21,18 +22,17 @@ function Chat({ id, emails }) {
   useEffect(() => {
     async function getUsersByEmail(){
       const q = query(collection(db, 'users'), where('email', 'in', emails))
-      const users = await getDocs(q);
-      setUsers(users);
+      const result = await getDocs(q);
+      setUsers(result);
     }
     getUsersByEmail();
   }, [emails])
-
+  
+  console.log(typeof(users))
+  
   return (
     <Container>
-      {users?.docs.map((user) => {
-        <UserAvatar />
-      })}
-      
+        <ChatHeads emails={emails}/>   
       <p>{emails.join(', ')}</p>      
     </Container>
   );

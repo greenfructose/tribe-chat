@@ -34,7 +34,6 @@ function Sidebar() {
       const chatsSnapshot = await getChats(db, user);
       setChatsSnapshot(chatsSnapshot);
     }
-    getChatsSnapshot();
   }, [user])
   console.log(chatsSnapshot)
   return (
@@ -153,6 +152,6 @@ const chatAlreadyExists = async (chatUsers, chatsSnapshot) => {
 };
 
 const getChats = async (db, user) => {
-  const q = query(collection(db, 'chats'), where('creator', '==', user.uid))
+  const q = query(collection(db, 'chats'), where('users', 'array-contains', user.email))
   return await getDocs(q)
 }; 
