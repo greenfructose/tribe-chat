@@ -1,5 +1,5 @@
-import { 
-  useState, 
+import {
+  useState,
   useEffect,
 } from 'react';
 import { Avatar } from '@material-ui/core';
@@ -10,35 +10,40 @@ import {
   where,
   getDocs,
 } from 'firebase/firestore';
-import { 
+import {
   db
 } from '../firebase';
 
-function ChatHeads(emails) {
+function ChatHeads(emails, users) {
   const [usersSnapshot, setUsersSnapshot] = useState(null);
+
   useEffect(() => {
-    async function getUsersSnapshot(){
+    async function getUsersSnapshot() {
       const usersSnapshot = await getUsers(db, emails.emails);
       setUsersSnapshot(usersSnapshot);
     }
     getUsersSnapshot();
   }, [emails])
   return (
-    <div>
-{usersSnapshot?.docs.map((user) => (
-      <UserAvatar key={user.id} id={user.id} src={user.data().photoURL} />
-    ))}
-    </div>
-    
-    
+    <AvatarContainer>
+      {usersSnapshot?.docs.map((user) => (
+        <UserAvatar key={user.id} id={user.id} src={user.data().photoURL} />
+      ))}
+    </AvatarContainer>
+
+
   )
 }
 
 export default ChatHeads
 
+
+const AvatarContainer = styled.div`
+  display: flex;
+  margin-right: 1rem;
+`;
 const UserAvatar = styled(Avatar)`
-  margin: 5px;
-  margin-right: 15px;
+  margin-left: -1rem;
 `;
 
 const getUsers = async (db, emails) => {

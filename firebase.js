@@ -13,11 +13,6 @@ import {
   setDoc,
   doc,
   getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
   updateDoc,
   serverTimestamp
 } from 'firebase/firestore';
@@ -43,19 +38,32 @@ const signInWithGoogle = () => {
     signInWithPopup(auth, googleProvider).then(result => {
       const user = result.user;
       const userRef = doc(db, 'users', user.uid);
-      setDoc(userRef, {
-        name: user.displayName,
-        authProvider: 'local',
-        photoURL: '',
-        loggedIn: true,
-        lastSeen: serverTimestamp()
+      getDoc(userRef).then(doc => {
+        if (!doc.data().authProvider) {
+          setDoc(userRef, {
+            name: user.displayName,
+            email: user.email,
+            authProvider: 'google',
+            photoURL: user.photoURL,
+            loggedIn: true,
+            lastSeen: serverTimestamp()
+          });
+        } else {
+          updateDoc(userRef, {
+            loggedIn: true,
+            lastSeen: serverTimestamp()
+          })
+        }
       });
+      
+      
     });
   } catch (err) {
     console.error(err);
     alert(err.message);
   }
 };
+
 
 const logInWithEmailAndPassword = (email, password) => {
   try {

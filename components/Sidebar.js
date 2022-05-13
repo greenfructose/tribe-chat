@@ -21,7 +21,7 @@ import {
   query,
   where,
   getDocs,
-  docs,
+
 } from 'firebase/firestore';
 import { arraysAreEqual } from '../utils/arrayUtils';
 import Chat from '../components/Chat';
@@ -34,6 +34,7 @@ function Sidebar() {
       const chatsSnapshot = await getChats(db, user);
       setChatsSnapshot(chatsSnapshot);
     }
+    getChatsSnapshot();
   }, [user])
   console.log(chatsSnapshot)
   return (
@@ -57,7 +58,7 @@ function Sidebar() {
         Start a new chat
       </SidebarButton>
       {chatsSnapshot?.docs.map((chat) => (
-        <Chat key={chat.id} id={chat.id} emails={chat.data().users} />
+        <Chat key={chat.id} id={chat.id} emails={chat.data().users.filter(e => {return e !== user.email})} />
       ))}
     </Container>
   );
