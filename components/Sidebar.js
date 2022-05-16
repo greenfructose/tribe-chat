@@ -40,7 +40,7 @@ function Sidebar() {
   return (
     <Container>
       <Header>
-        <UserAvatar onClick={logout} />
+        <UserAvatar onClick={logout} src={user.photoURL} />
         <IconsContainer>
           <IconButton>
             <ChatIcon />

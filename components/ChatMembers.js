@@ -42,7 +42,7 @@ function ChatMembers(emails) {
     <MembersContainer>
       <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
       {registeredMembers.length>0 && unregisteredMembers.length>0 && <Breaker>|</Breaker>}
-      <UnregisteredMember>{unregisteredMembers.join(', ')}</UnregisteredMember>
+      <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length>0 && '(unregistered)'}</UnregisteredMember>
     </MembersContainer>
   )
 }

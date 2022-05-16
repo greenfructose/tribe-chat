@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
 import {
@@ -17,10 +18,13 @@ import ChatMembers from '../components/ChatMembers';
 
 
 function Chat({ id, emails}) {
-  
+  const router = useRouter();
+  const enterChat = () => {
+    router.push(`/chat/${id}`);
+  }
 
   return (
-    <Container key={id}>
+    <Container key={id} onClick={enterChat}>
       <ChatHeads emails={emails} />
       <ChatMembers emails={emails}  id={id} />
     </Container>
