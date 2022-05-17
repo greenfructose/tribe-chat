@@ -9,18 +9,24 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import {
   docs,
+  doc,
+  addDoc,
   query,
   orderBy,
   getDocs,
+  getDoc,
+  updateDoc,
   getFirestore,
   collection,
-  where
+  where,
+  serverTimestamp
 } from 'firebase/firestore';
 import { auth, db, app } from '../firebase';
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import Message from './Message';
+import Members from './Members';
 import { InsertEmoticon } from '@material-ui/icons';
 import MicIcon from '@material-ui/icons/Mic';
 
@@ -54,44 +60,67 @@ function ChatScreen({ chat, messages }) {
             timestamp: message.data().timestamp?.toDate().getTime()
           }}
         />
-      ))
+      ));
+    } else {
+      return JSON.parse(messages).map((message) => (
+        <Message key={message.id} user={message.user} message={message} />
+      ));
     }
   }
 
   const sendMessage = (e) => {
     e.preventDefault();
 
+    const userRef = doc(db, 'users', user.uid);
+    getDoc(userRef).then(doc => {
+      updateDoc(userRef, {
+        loggedIn: true,
+        lastSeen: serverTimestamp()
+      });
+    });
+    addDoc(collection(db, 'messages'), {
+      timestamp: serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL,
+      chat: router.query.id
+    }).then();
+    setInput('');
+  };
+
+return (
+  <Container>
+    <Header>
+      <Avatar src={user.photoURL} />
+      <HeaderInformation>
+        <h3>{user.displayName}</h3>
+        <p>Last Seen: </p>
+      </HeaderInformation>
+      <HeaderIcons>
+        <IconButton>
+          <AttachFileIcon />
+        </IconButton>
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
+      </HeaderIcons>
+      
+    </Header>
     
-  }
-  return (
-    <Container>
-      <Header>
-        <Avatar src={user.photoURL} />
-        <HeaderInformation>
-          <h3>{user.displayName}</h3>
-          <p>Last Seen: </p>
-        </HeaderInformation>
-        <HeaderIcons>
-          <IconButton>
-            <AttachFileIcon />
-          </IconButton>
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        </HeaderIcons>
-      </Header>
-      <MessageContainer>
-        {showMessages()}
-        <EndOfMessages />
-      </MessageContainer>
-      <InputContainer>
-        <InsertEmoticon />
-        <Input value={input} onChange={e => setInput(e.target.value)} />
-        <button hidden disabled={!input} type='submit' onClick={sendMessage}>Send Message</button>
-        <MicIcon />
-      </InputContainer>
-    </Container>
-  )
+    
+    <MessageContainer>
+      {showMessages()}
+      <EndOfMessages />
+      
+    </MessageContainer>
+    <InputContainer>
+      <InsertEmoticon />
+      <Input value={input} onChange={e => setInput(e.target.value)} />
+      <button hidden disabled={!input} type='submit' onClick={sendMessage}>Send Message</button>
+      <MicIcon />
+    </InputContainer>
+  </Container>
+)
 }
 
 export default ChatScreen
@@ -126,6 +155,7 @@ background-color: #e5ded8;
 min-height: 90vh;
 `;
 const EndOfMessages = styled.div``;
+
 const InputContainer = styled.form`
 display: flex;
 align-items: center;

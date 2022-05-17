@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import styled from 'styled-components';
 import Sidebar from '../../components/sidebar';
-import ChatScreen from '../../components/ChatScreen'
+import ChatScreen from '../../components/ChatScreen';
+import Members from '../../components/Members';
 import{ 
   collection,
   query, 
@@ -27,7 +28,9 @@ function Chat({chat, messages}) {
       <Sidebar />
       <ChatContainer>
         <ChatScreen chat={chat} messages={messages}/>
+        
       </ChatContainer>
+      <Members key={chat.id} members={chat.users}/>
     </Container>
   )
 }
