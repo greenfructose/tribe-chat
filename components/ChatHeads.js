@@ -16,6 +16,7 @@ import {
 
 function ChatHeads(emails, users) {
   const [usersSnapshot, setUsersSnapshot] = useState(null);
+  const [userEmails, setUsersEmails] = useState([]);
 
   useEffect(() => {
     async function getUsersSnapshot() {
@@ -24,11 +25,31 @@ function ChatHeads(emails, users) {
     }
     getUsersSnapshot();
   }, [emails])
+  useEffect(() => {
+    async function getUserEmails() {
+      const usersSnapshot = await getUsers(db, emails.emails);
+      let userEmails = []
+      usersSnapshot.forEach(user => {
+        setUsersEmails(() => [...userEmails, user.data().email])
+      });
+    }
+    getUserEmails();
+  }, [emails])
   return (
     <AvatarContainer>
-      {usersSnapshot?.docs.map((user) => (
-        <UserAvatar key={user.id} id={user.id} src={user.data().photoURL} />
+      {emails.emails?.map(email => (
+        !userEmails.includes(email)?(
+          <UserAvatar>{email[0].toUpperCase()}</UserAvatar>
+        ) : (
+          usersSnapshot?.docs.map(user => (
+            user.data().email == email?
+            <UserAvatar key={user.id} id={user.id} src={user.data().photoURL}></UserAvatar>
+            : null
+          ))
+        )
+        
       ))}
+      
     </AvatarContainer>
 
 

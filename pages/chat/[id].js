@@ -7,19 +7,26 @@ import{
   query, 
   where, 
   getDocs,
+  getDoc,
+  doc,
+  docs,
   orderBy,
 } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { 
+  db,
+  auth
+} from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-function Chat() {
+function Chat({chat, messages}) {
   return (
     <Container>
       <Head>
-        <title>Chat</title>
+        <title>Chat with {chat.users.join(', ')}</title>
       </Head>
       <Sidebar />
       <ChatContainer>
-        <ChatScreen />
+        <ChatScreen chat={chat} messages={messages}/>
       </ChatContainer>
     </Container>
   )
@@ -28,7 +35,7 @@ function Chat() {
 export default Chat;
 
 export async function getServerSideProps(context) {
-  const q = query(collection(db, 'messages'), 
+  const q = query(collection(db, 'chats'), 
     where('id', '==', context.query.id),
     orderBy('timestamp', 'asc'))
   const messageRes = await getDocs(q)
@@ -39,7 +46,18 @@ export async function getServerSideProps(context) {
     ...messages,
     timestamp: messages.timestamp.toDate().getTime()
   }));
-  
+  const chatRef = doc(db, 'chats', context.query.id);
+  const chatRes = await getDoc(chatRef);
+  const chat = {
+    id: chatRes.id,
+    ...chatRes.data()
+  }
+  return {
+    props: {
+      messages: JSON.stringify(messages),
+      chat: chat
+    }
+  }
 };
 
 const Container = styled.div`

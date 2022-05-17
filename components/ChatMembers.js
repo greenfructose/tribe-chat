@@ -37,7 +37,6 @@ function ChatMembers(emails) {
   }, [emails])
 
 
-  console.log(`Registered members: ${registeredMembers}`)
   return (
     <MembersContainer>
       <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
@@ -82,30 +81,30 @@ const isRegistered = async (member) => {
 const getRegisteredMembers = async (emails) => {
   let reg = [];
   for (let email of emails) {
-    console.log(`Checking if ${email} is registered...`)
+
     await isRegistered(email).then((result) => {
       if (result) {
         reg.push(email)
-        console.log(`${email} is registered`)
+
       }
     });
   };
-  console.log(`Reg: ${reg}`)
+
   return reg;
 };
 
 const getUnregisteredMembers = async (emails) => {
   let unreg = [];
   for (let email of emails) {
-    console.log(`Checking if ${email} is registered...`)
+
     await isRegistered(email).then((result) => {
       if (!result) {
         unreg.push(email)
-        console.log(`${email} is registered`)
+
       }
     });
   };
-  console.log(`Reg: ${unreg}`)
+
   return unreg;
 };
 
