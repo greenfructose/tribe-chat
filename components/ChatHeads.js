@@ -4,6 +4,7 @@ import {
 } from 'react';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
+import media from '../styles/media';
 import {
   collection,
   query,
@@ -60,11 +61,15 @@ export default ChatHeads
 
 
 const AvatarContainer = styled.div`
-  display: flex;
-  margin-right: 1rem;
+
+    display: flex;
+    margin-right: 1rem;
+
 `;
 const UserAvatar = styled(Avatar)`
-  margin-left: -1rem;
+
+    margin-left: -1rem;
+
 `;
 
 const getUsers = async (db, emails) => {

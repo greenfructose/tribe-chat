@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import styled from 'styled-components';
+import media from '../../styles/media';
 import Sidebar from '../../components/sidebar';
 import ChatScreen from '../../components/ChatScreen';
 import Members from '../../components/Members';
@@ -25,10 +26,12 @@ function Chat({chat, messages}) {
       <Head>
         <title>Chat with {chat.users.join(', ')}</title>
       </Head>
-      <Sidebar />
+      <SidebarContainer>
+        <Sidebar />
+      </SidebarContainer>
+      
       <ChatContainer>
         <ChatScreen chat={chat} messages={messages}/>
-        
       </ChatContainer>
       <Members key={chat.id} members={chat.users}/>
     </Container>
@@ -65,9 +68,18 @@ export async function getServerSideProps(context) {
 
 const Container = styled.div`
   display: flex;
+  width: 100vw;
+`;
+
+const SidebarContainer = styled.div`
+  display: none;
+  ${media.desktop`
+    display: block;
+  `}
 `;
 
 const ChatContainer = styled.div`
+  width: 100vw;
   flex: 1;
   overflow: scroll;
   height: 100vh;

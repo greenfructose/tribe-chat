@@ -5,6 +5,7 @@ import {
 } from 'react';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
+import media from '../styles/media';
 import {
   collection,
   query,
@@ -38,20 +39,20 @@ function ChatMembers(emails) {
 
 
   return (
-    
-      <ToolTip toolTipText={emails.emails.join('\r\n')}>
-        <MembersContainer>
-      {registeredMembers.length > 0 &&
-        <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
-      }
-      {registeredMembers.length > 0 && unregisteredMembers.length > 0 && <Breaker></Breaker>}
-      {unregisteredMembers.length > 0 &&
-        <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length > 0 && '(unregistered)'}</UnregisteredMember>
-      }
-</MembersContainer>
-      </ToolTip>
-      
-    
+
+    <ToolTip toolTipText={emails.emails.join('\r\n')}>
+      <MembersContainer>
+        {registeredMembers.length > 0 &&
+          <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
+        }
+        {registeredMembers.length > 0 && unregisteredMembers.length > 0 && <Breaker></Breaker>}
+        {unregisteredMembers.length > 0 &&
+          <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length > 0 && '(unregistered)'}</UnregisteredMember>
+        }
+      </MembersContainer>
+    </ToolTip>
+
+
   )
 }
 
@@ -59,31 +60,46 @@ export default ChatMembers;
 
 
 const MembersContainer = styled.div`
+
   display: flex;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  ${media.desktop`
+    max-width:100%
+  `}
 
 `;
 const RegisteredMember = styled.p`
+
+  display: block;
   margin-right: 0.5rem;
   width: 150px;
   color: green;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+
 `;
 const UnregisteredMember = styled.p`
+
+  display: block;
   margin-right: 0.5rem;
   color: red;
   width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+
 `;
 const Breaker = styled.p`
+
+  display: block;
   margin-left: 0;
   margin-right: 0.5rem;
+
 `;
 
 const isRegistered = async (member) => {

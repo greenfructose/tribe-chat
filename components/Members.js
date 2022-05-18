@@ -5,6 +5,7 @@ import {
 } from 'react';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
+import media from '../styles/media';
 import {
   collection,
   query,
@@ -40,10 +41,12 @@ function Members(members) {
   return (
     <MembersContainer>
       <Header>
-        <h3>Members</h3>
+        <HeaderInformation>
+          <h3>Members</h3>
+        </HeaderInformation>
       </Header>
       {registeredMembers.map((member => (
-        <RegisteredMember key={member}>{member}</RegisteredMember>
+        <RegisteredMember key={member} >{member}<p>{getLastActive(member)}</p></RegisteredMember>
       )
       ))
       }
@@ -60,46 +63,76 @@ export default Members;
 
 
 const Header = styled.div`
-position: sticky;
-background-color: white;
-z-index: 100;
-top: 0;
-display: flex;
-padding: 11px;
-height: 80px;
-align-items: center;
-border-bottom: 1px solid whitesmoke;
-border-left: 1px solid whitesmoke;
+  display: none;
+  ${media.tablet`
+    position: sticky;
+    background-color: white;
+    z-index: 100;
+    top: 0;
+    display: block;
+    padding: 11px;
+    height: 80px;
+    align-items: center;
+    border-bottom: 1px solid whitesmoke;
+    border-left: 1px solid whitesmoke;
+    `
+  }
 `;
 const HeaderInformation = styled.div`
-margin-left: 15px;
-flex: 1;
-> h3 {
-  margin-bottom: 3px;
-}
-> p {
-  font-size: 14px;
-  color: gray;
-}
-`
-  ;
+  display: none;
+  ${media.tablet`
+    display: block;
+    margin-left: 15px;
+    flex: 1;
+    > h3 {
+      margin-bottom: 3px;
+    }
+    > p {
+      font-size: 14px;
+      color: gray;
+    }  
+    `
+  }
+`;
 const MembersContainer = styled.div`
+  display: none;
+  ${media.tablet`
+    display: block;
+  `}
 
 `;
 const RegisteredMember = styled.p`
-padding-left: 0.5rem;
-padding-right: 0.5rem;
-
-color: green;
+  display: none;
+  ${media.tablet`
+    display: flex;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: green;
+    > p {
+      color: gray;
+      font-size: 10px;
+    }
+    `
+  }
 `;
 const UnregisteredMember = styled.p`
-padding-left: 0.5rem;
-padding-right: 0.5rem;
-color: red;
+display: none;
+  ${media.tablet`
+    display: flex;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: red;
+    `
+  }
 `;
 const Breaker = styled.p`
-margin-left: 0;
-margin-right: 0.5rem;
+display: none;
+  ${media.tablet`
+    display: flex;
+    margin-left: 0;
+    margin-right: 0.5rem;
+    `
+  }
 `;
 
 const isRegistered = async (member) => {
@@ -146,15 +179,14 @@ const getUnregisteredMembers = async (members) => {
   return unreg;
 };
 
-// const getUnregisteredMembers = async (emails) => {
-//   let unregisteredMembers = [];
-//   emails.forEach(email => {
-//     isRegistered(email).then((result) => {
-//       if (!result) {
-//         console.log(`${email} is not registered`)
-//         unregisteredMembers.push(email);
-//       }
-//     })
-//   });
-//   return unregisteredMembers;
-// };
+const getLastActive = async (email) => {
+  let result = '';
+  const userRef = doc(db, 'users', `email: ${email}`);
+  await getDoc(userRef).then((userSnap) => {
+    if (userSnap.data()) {
+      console.log(`Last Seen: ${userSnap.data()}`)
+      result = userSnap.data().lastSeen.toDate().getTime()
+    }
+  });
+  return result;
+};

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
+import media from '../styles/media';
 import {
   db,
 } from '../firebase';
@@ -35,19 +36,24 @@ function Chat({ id, emails}) {
 export default Chat;
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 15px;
-  word-break: break-word;
 
-  :hover {
-    background-color: #e9eaeb;
-  }
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 15px;
+    word-break: break-word;
+
+    :hover {
+      background-color: #e9eaeb;
+    }
+
 `;
 
 const UserAvatar = styled(Avatar)`
-  margin: 5px;
-  margin-right: 15px;
+
+    display: block;
+    margin: 5px;
+    margin-right: 15px;
+
 `;
 

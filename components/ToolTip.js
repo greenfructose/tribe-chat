@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import media from '../styles/media';
 
 
 const ToolTip = ({ children, toolTipText }) => (
@@ -31,9 +32,11 @@ const ToolTipText = styled.span`
 `;
 
 const ToolTipBox = styled.div`
-  position: relative;
-  display: inline-block;
-  :hover span {
-    visibility: visible;
-  }
+
+    position: relative;
+    display: inline-block;
+    :hover span {
+      visibility: visible;
+    }
+
 `;

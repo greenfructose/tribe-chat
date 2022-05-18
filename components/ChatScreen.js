@@ -29,6 +29,7 @@ import Message from './Message';
 import Members from './Members';
 import { InsertEmoticon } from '@material-ui/icons';
 import MicIcon from '@material-ui/icons/Mic';
+import media from '../styles/media';
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -48,7 +49,9 @@ function ChatScreen({ chat, messages }) {
     getMessagesSnapshot();
   }, [router])
 
-
+  const refreshData = () => {
+    router.replace(router.asPath);
+  }
   const showMessages = () => {
     if (messagesSnapshot) {
       return messagesSnapshot.docs.map(message => (
@@ -86,95 +89,118 @@ function ChatScreen({ chat, messages }) {
       chat: router.query.id
     }).then();
     setInput('');
+    refreshData();
   };
 
-return (
-  <Container>
-    <Header>
-      <Avatar src={user.photoURL} />
-      <HeaderInformation>
-        <h3>{user.displayName}</h3>
-        <p>Last Seen: </p>
-      </HeaderInformation>
-      <HeaderIcons>
-        <IconButton>
-          <AttachFileIcon />
-        </IconButton>
-        <IconButton>
-          <MoreVertIcon />
-        </IconButton>
-      </HeaderIcons>
-      
-    </Header>
-    
-    
-    <MessageContainer>
-      {showMessages()}
-      <EndOfMessages />
-      
-    </MessageContainer>
-    <InputContainer>
-      <InsertEmoticon />
-      <Input value={input} onChange={e => setInput(e.target.value)} />
-      <button hidden disabled={!input} type='submit' onClick={sendMessage}>Send Message</button>
-      <MicIcon />
-    </InputContainer>
-  </Container>
-)
+  return (
+    <Container>
+      <Header>
+        <p>Signed in as:</p>
+
+        <HeaderInformation>
+          <UserAvatar src={user.photoURL} />
+          <h3>{user.displayName}</h3>
+        </HeaderInformation>
+        <HeaderIcons>
+          <IconButton>
+            <AttachFileIcon />
+          </IconButton>
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        </HeaderIcons>
+
+      </Header>
+
+
+      <MessageContainer>
+        {showMessages()}
+        <EndOfMessages />
+
+      </MessageContainer>
+      <InputContainer>
+        <InsertEmoticon />
+        <Input value={input} onChange={e => setInput(e.target.value)} />
+        <button hidden disabled={!input} type='submit' onClick={sendMessage}>Send Message</button>
+        <MicIcon />
+      </InputContainer>
+    </Container>
+  )
 }
 
 export default ChatScreen
 
-const Container = styled.div``;
+const Container = styled.div`
+`;
+
+const UserAvatar = styled(Avatar)`
+  display: none;
+  ${media.tablet`
+    display: block;
+  `}
+`;
+
 const Header = styled.div`
-position: sticky;
-background-color: white;
-z-index: 100;
-top: 0;
-display: flex;
-padding: 11px;
-height: 80px;
-align-items: center;
-border-bottom: 1px solid whitesmoke;
+  position: sticky;
+  background-color: white;
+  z-index: 100;
+  top: 0;
+  display: flex;
+  padding: 11px;
+  height: 80px;
+  align-items: center;
+  border-bottom: 1px solid whitesmoke;
+  > p {
+    margin-right: 0.5rem;
+  }
 `;
 const HeaderInformation = styled.div`
-margin-left: 15px;
-flex: 1;
-> h3 {
-  margin-bottom: 3px;
-}
-> p {
-  font-size: 14px;
-  color: gray;
-}
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 15px;
+    > h3 {
+     margin: 1rem;
+    }
+    > p {
+      font-size: 14px;
+      color: gray;
+    }
 `;
-const HeaderIcons = styled.div``;
+const HeaderIcons = styled.div`
+  display: flex;
+  ${media.tablet`
+    display: flex;
+    position: absolute;
+    right: 0;
+  `}
+`;
 const MessageContainer = styled.div`
-padding: 30px;
-background-color: #e5ded8;
-min-height: 90vh;
+  padding: 30px;
+  background-color: #e5ded8;
+  min-height: 90vh;
 `;
 const EndOfMessages = styled.div``;
 
 const InputContainer = styled.form`
-display: flex;
-align-items: center;
-padding: 10px;
-position: sticky;
-bottom: 0;
-background-color: white;
-z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
 `;
 const Input = styled.input`
-flex: 1;
-outline: 0;
-border: none;
-border-radius: 10px;
-align-items: center;
-padding: 20px;
-margin-left: 15px;
-margin-right: 15px;
-position: sticky;
-bottom: 0;
-background-color: whitesmoke;
+  flex: 1;
+  outline: 0;
+  border: none;
+  border-radius: 10px;
+  align-items: center;
+  padding: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  position: sticky;
+  bottom: 0;
+  background-color: whitesmoke;
 `;
