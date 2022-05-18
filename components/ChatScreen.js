@@ -35,7 +35,6 @@ function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [messagesSnapshot, setMessageSnapshot] = useState(null);
   const [input, setInput] = useState('');
-
   const router = useRouter();
 
   useEffect(() => {
@@ -85,6 +84,7 @@ function ChatScreen({ chat, messages }) {
       timestamp: serverTimestamp(),
       message: input,
       user: user.email,
+      userName: user.displayName,
       photoURL: user.photoURL,
       chat: router.query.id
     }).then();

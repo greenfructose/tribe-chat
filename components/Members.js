@@ -17,6 +17,7 @@ import {
 import {
   db
 } from '../firebase';
+import TimeAgo from 'timeago-react';
 
 function Members(members) {
 
@@ -36,7 +37,7 @@ function Members(members) {
       }
     })
   }, [members])
-
+  getLastActive('info@justinturney.com');
 
   return (
     <MembersContainer>
@@ -46,10 +47,15 @@ function Members(members) {
         </HeaderInformation>
       </Header>
       {registeredMembers.map((member => (
-        <RegisteredMember key={member} >{member}<p>{getLastActive(member)}</p></RegisteredMember>
+        <RegMemberContainer  key={member.id}>
+        <RegisteredMember>{member.name}</RegisteredMember>
+        <p>{member.email}</p>
+        <p>Last active: <TimeAgo timestamp={member.lastSeen}/></p>
+        </RegMemberContainer>
       )
       ))
       }
+      {unregisteredMembers.length>0 && <Breaker>Unregistered Members</Breaker>}
       {unregisteredMembers.map((member => (
         <UnregisteredMember key={member}>{member}</UnregisteredMember>
       )))}
@@ -98,51 +104,67 @@ const MembersContainer = styled.div`
   display: none;
   ${media.tablet`
     display: block;
+    
   `}
-
 `;
-const RegisteredMember = styled.p`
+
+const RegMemberContainer = styled.div`
+  :hover {
+      background-color: #e9eaeb;
+    }
+  > p {
+    font-size: 10px;
+    color: gray;
+    margin-left: 15px;
+    margin-top: 1px;
+  }
+`;
+
+const RegisteredMember = styled.div`
   display: none;
   ${media.tablet`
     display: flex;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     color: green;
-    > p {
-      color: gray;
-      font-size: 10px;
-    }
-    `
-  }
+  `}
 `;
-const UnregisteredMember = styled.p`
+
+
+
+const UnregisteredMember = styled.div`
 display: none;
   ${media.tablet`
     display: flex;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     color: red;
+    :hover {
+      background-color: #e9eaeb;
+    }
     `
   }
 `;
 const Breaker = styled.p`
 display: none;
   ${media.tablet`
+    background-color: whitesmoke;
     display: flex;
-    margin-left: 0;
-    margin-right: 0.5rem;
+    border-top: 2px solid whitesmoke;
+    border-bottom: 2px solid whitesmoke;
+    padding: 1rem
     `
   }
 `;
 
 const isRegistered = async (member) => {
-  let result = false;
+  let result = null;
   const usersRef = collection(db, 'users');
   const q = query(usersRef, where('email', '==', member))
   await getDocs(q).then((usersSnap) => {
     usersSnap.forEach((user) => {
       if (user.data().email === member) {
-        result = true;
+        result = user.data();
       }
     })
   });
@@ -155,12 +177,10 @@ const getRegisteredMembers = async (members) => {
 
     await isRegistered(member).then((result) => {
       if (result) {
-        reg.push(member)
-
+        reg.push(result);
       }
     });
   };
-
   return reg;
 };
 
@@ -181,11 +201,11 @@ const getUnregisteredMembers = async (members) => {
 
 const getLastActive = async (email) => {
   let result = '';
-  const userRef = doc(db, 'users', `email: ${email}`);
-  await getDoc(userRef).then((userSnap) => {
-    if (userSnap.data()) {
-      console.log(`Last Seen: ${userSnap.data()}`)
-      result = userSnap.data().lastSeen.toDate().getTime()
+  const userRef = doc(db, 'users', email);
+  await getDoc(userRef).then(userSnap => {
+    if (userSnap.exists()) {
+      console.log(`Last Seen: ${userSnap.data()}`);
+      // result = userSnap.data().lastSeen.toDate().getTime();
     }
   });
   return result;

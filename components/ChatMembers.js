@@ -45,7 +45,6 @@ function ChatMembers(emails) {
         {registeredMembers.length > 0 &&
           <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
         }
-        {registeredMembers.length > 0 && unregisteredMembers.length > 0 && <Breaker></Breaker>}
         {unregisteredMembers.length > 0 &&
           <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length > 0 && '(unregistered)'}</UnregisteredMember>
         }
@@ -94,13 +93,7 @@ const UnregisteredMember = styled.p`
 
 
 `;
-const Breaker = styled.p`
 
-  display: block;
-  margin-left: 0;
-  margin-right: 0.5rem;
-
-`;
 
 const isRegistered = async (member) => {
   let result = false;

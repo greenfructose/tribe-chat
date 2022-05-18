@@ -90,7 +90,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       const user = result.user;
       const userRef = doc(db, 'users', user.uid);
       setDoc(userRef, {
-        name: name,
+        displayName: name,
         authProvider: 'local',
         photoURL: '',
         loggedIn: true,
