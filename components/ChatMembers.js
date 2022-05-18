@@ -16,7 +16,7 @@ import {
 import {
   db
 } from '../firebase';
-import { Loading } from '../components/Loading'
+import ToolTip from './ToolTip';
 
 function ChatMembers(emails) {
   const [registeredMembers, setRegisteredMembers] = useState([]);
@@ -38,30 +38,52 @@ function ChatMembers(emails) {
 
 
   return (
-    <MembersContainer>
-      <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
-      {registeredMembers.length>0 && unregisteredMembers.length>0 && <Breaker>|</Breaker>}
-      <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length>0 && '(unregistered)'}</UnregisteredMember>
-    </MembersContainer>
+    
+      <ToolTip toolTipText={emails.emails.join('\r\n')}>
+        <MembersContainer>
+      {registeredMembers.length > 0 &&
+        <RegisteredMember>{registeredMembers.join(', ')}</RegisteredMember>
+      }
+      {registeredMembers.length > 0 && unregisteredMembers.length > 0 && <Breaker></Breaker>}
+      {unregisteredMembers.length > 0 &&
+        <UnregisteredMember>{unregisteredMembers.join('(unregistered), ')}{unregisteredMembers.length > 0 && '(unregistered)'}</UnregisteredMember>
+      }
+</MembersContainer>
+      </ToolTip>
+      
+    
   )
 }
 
 export default ChatMembers;
 
+
 const MembersContainer = styled.div`
   display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 `;
 const RegisteredMember = styled.p`
-margin-right: 0.5rem;
-color: green;
+  margin-right: 0.5rem;
+  width: 150px;
+  color: green;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const UnregisteredMember = styled.p`
-margin-right: 0.5rem;
-color: red;
+  margin-right: 0.5rem;
+  color: red;
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const Breaker = styled.p`
-margin-left: 0;
-margin-right: 0.5rem;
+  margin-left: 0;
+  margin-right: 0.5rem;
 `;
 
 const isRegistered = async (member) => {
