@@ -1,6 +1,7 @@
 import {
   useState,
-  useEffect
+  useEffect,
+  useRef
 } from 'react';
 import { useRouter } from 'next/router';
 import { Avatar } from '@material-ui/core';
@@ -35,6 +36,7 @@ function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [messagesSnapshot, setMessageSnapshot] = useState(null);
   const [input, setInput] = useState('');
+  const endOfMessagesRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -70,6 +72,13 @@ function ChatScreen({ chat, messages }) {
     }
   }
 
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+  
   const sendMessage = (e) => {
     e.preventDefault();
 
@@ -90,6 +99,7 @@ function ChatScreen({ chat, messages }) {
     }).then();
     setInput('');
     refreshData();
+    scrollToBottom();
   };
 
   return (
@@ -115,7 +125,7 @@ function ChatScreen({ chat, messages }) {
 
       <MessageContainer>
         {showMessages()}
-        <EndOfMessages />
+        <EndOfMessages ref={endOfMessagesRef}/>
 
       </MessageContainer>
       <InputContainer>
@@ -180,7 +190,9 @@ const MessageContainer = styled.div`
   background-color: #e5ded8;
   min-height: 90vh;
 `;
-const EndOfMessages = styled.div``;
+const EndOfMessages = styled.div`
+  margin-bottom: 50px;
+`;
 
 const InputContainer = styled.form`
   display: flex;
