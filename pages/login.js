@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Head from 'next/head';
 import styled from 'styled-components';
 import {
@@ -16,14 +16,24 @@ import {
   signInWithGoogle,
   registerWithEmailAndPassword,
 } from "../firebase";
-
+import { Context } from '../context';
 
 
 function Login() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const {
+    username,
+    setUsername,
+    password,
+    setPassword,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    googleProvider,
+    signOut,
+    onAuthStateChanged,
+    auth
+  } = useContext(Context);
   const [hidePassword, setHidePassword] = useState(true);
-  const [password, setPassword] = useState('');
   const [passwordConfirm, setConfirmPassword] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -39,7 +49,7 @@ function Login() {
           src='favicon.ico'
         />
         <Button
-          onClick={signInWithGoogle}
+          onClick={() => signInWithPopup(auth, googleProvider)}
           variant='outlined'
         >
           Sign in with Google
@@ -60,7 +70,7 @@ function Login() {
           Register with Email and Password
         </Button>
         <Button
-          onClick={signInWithGoogle}
+          onClick={() => signInWithPopup(auth, googleProvider)}
           variant='outlined'
         >
           Register with Google
@@ -79,27 +89,14 @@ function Login() {
               <Form>
                 <FormControl>
                   <InputLabel
-                    htmlFor="name"
-                  >
-                    Username
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Username"
-                  />
-                </FormControl>
-                <FormControl>
-                  <InputLabel
                     htmlFor="email"
                   >
                     Email
                   </InputLabel>
                   <Input
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     placeholder="E-mail Address"
                   />
                 </FormControl>
@@ -167,9 +164,9 @@ function Login() {
                 </FormControl>
 
                 <Button
-                  onClick={() => registerWithEmailAndPassword(
-                    name,
-                    email,
+                  onClick={() => createUserWithEmailAndPassword(
+                    auth,
+                    username,
                     password
                   )}>
                   Register
@@ -198,8 +195,8 @@ function Login() {
                   </InputLabel>
                   <Input
                     type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     placeholder="E-mail Address"
                   />
                 </FormControl>
@@ -234,8 +231,10 @@ function Login() {
                   />
                 </FormControl>
                 <Button
-                  onClick={() => logInWithEmailAndPassword(
-                    email, password
+                  onClick={() => signInWithEmailAndPassword(
+                    auth,
+                    username, 
+                    password
                   )}
                 >
                   Log In

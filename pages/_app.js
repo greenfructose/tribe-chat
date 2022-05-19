@@ -5,6 +5,7 @@ import { auth, db } from '../firebase';
 import Login from './login';
 import Loading from '../components/Loading';
 import { serverTimestamp, collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { ContextProvider } from '../context';
 
 function MyApp({ Component, pageProps }) {
   const [user, loading, error] = useAuthState(auth);
@@ -24,9 +25,13 @@ function MyApp({ Component, pageProps }) {
 
   if (loading) return <Loading />
 
-  if (!user) return <Login />
+  if (!user) return <ContextProvider><Login /></ContextProvider>
 
-  return <Component {...pageProps} />  
+  return (
+    <ContextProvider>
+      <Component {...pageProps} />
+    </ContextProvider>  
+  );
 }
 
 export default MyApp
