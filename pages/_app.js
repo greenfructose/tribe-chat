@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }) {
 
   if (!user) return <Login />
 
-  return <Component {...pageProps} />
+  return <Component {...pageProps} />  
 }
 
 export default MyApp

@@ -1,15 +1,15 @@
 import {
   useState,
   useEffect,
-  useRef
+  useRef,
+  useContext
 } from 'react';
 import { useRouter } from 'next/router';
 import { Avatar } from '@material-ui/core';
 import styled from 'styled-components';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import InputEmoji from 'react-input-emoji';
 import {
-  docs,
   doc,
   addDoc,
   query,
@@ -17,7 +17,6 @@ import {
   getDocs,
   getDoc,
   updateDoc,
-  getFirestore,
   collection,
   where,
   serverTimestamp
@@ -27,17 +26,18 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import Message from './Message';
-import Members from './Members';
-import { InsertEmoticon } from '@material-ui/icons';
 import MicIcon from '@material-ui/icons/Mic';
 import media from '../styles/media';
+
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
   const [messagesSnapshot, setMessageSnapshot] = useState(null);
   const [input, setInput] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
   const endOfMessagesRef = useRef(null);
   const router = useRouter();
+
 
   useEffect(() => {
     async function getMessagesSnapshot() {
@@ -52,6 +52,13 @@ function ChatScreen({ chat, messages }) {
 
   const refreshData = () => {
     router.replace(router.asPath);
+  }
+
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
   }
   const showMessages = () => {
     if (messagesSnapshot) {
@@ -70,18 +77,10 @@ function ChatScreen({ chat, messages }) {
         <Message key={message.id} user={message.user} message={message} />
       ));
     }
-  }
+  };
 
-  const scrollToBottom = () => {
-    endOfMessagesRef.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-  }
-  
-  const sendMessage = (e) => {
-    e.preventDefault();
 
+  const sendMessage = () => {
     const userRef = doc(db, 'users', user.uid);
     getDoc(userRef).then(doc => {
       updateDoc(userRef, {
@@ -103,37 +102,48 @@ function ChatScreen({ chat, messages }) {
   };
 
   return (
+    
     <Container>
+      
       <Header>
         <p>Signed in as:</p>
 
         <HeaderInformation>
           <UserAvatar src={user.photoURL} />
-          <h3>{user.displayName}</h3>
+          <h3>{user.displayName ? user.displayName : user.email}</h3>
         </HeaderInformation>
         <HeaderIcons>
+
           <IconButton>
-            <AttachFileIcon />
-          </IconButton>
-          <IconButton>
-            <MoreVertIcon />
+            <MoreVertIcon  />
           </IconButton>
         </HeaderIcons>
+        
 
       </Header>
 
-
       <MessageContainer>
         {showMessages()}
-        <EndOfMessages ref={endOfMessagesRef}/>
+        <EndOfMessages ref={endOfMessagesRef} />
 
       </MessageContainer>
       <InputContainer>
-        <InsertEmoticon />
-        <Input value={input} onChange={e => setInput(e.target.value)} />
+
+        <InputEmoji
+          value={input}
+          onChange={setInput}
+          onEnter={sendMessage}
+        />
+        {/* <Input value={input} onChange={e => setInput(e.target.value)} /> */}
         <button hidden disabled={!input} type='submit' onClick={sendMessage}>Send Message</button>
-        <MicIcon />
+        <IconButton>
+          <MicIcon />
+        </IconButton>
+        <IconButton>
+          <AttachFileIcon />
+        </IconButton>
       </InputContainer>
+      
     </Container>
   )
 }
@@ -147,6 +157,7 @@ const UserAvatar = styled(Avatar)`
   display: none;
   ${media.tablet`
     display: block;
+    
   `}
 `;
 
@@ -169,6 +180,10 @@ const HeaderInformation = styled.div`
     align-items: center;
     justify-content: space-between;
     margin-left: 15px;
+    cursor: pointer;
+    :hover {
+      background-color: #e9eaeb;
+    }
     > h3 {
      margin: 1rem;
     }
@@ -183,6 +198,7 @@ const HeaderIcons = styled.div`
     display: flex;
     position: absolute;
     right: 0;
+    
   `}
 `;
 const MessageContainer = styled.div`
@@ -203,16 +219,13 @@ const InputContainer = styled.form`
   background-color: white;
   z-index: 100;
 `;
-const Input = styled.input`
-  flex: 1;
-  outline: 0;
-  border: none;
-  border-radius: 10px;
-  align-items: center;
-  padding: 20px;
-  margin-left: 15px;
-  margin-right: 15px;
-  position: sticky;
-  bottom: 0;
-  background-color: whitesmoke;
+
+const Menu = styled.div`
+background-color: whitesmoke;
+position: fixed;
+left: 0;
+top: 0;
+transform: translate3d(-100vw, 0, 0);
+width: 100vw;
+height: 100vh;
 `;

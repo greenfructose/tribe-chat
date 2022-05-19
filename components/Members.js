@@ -48,7 +48,7 @@ function Members(members) {
       </Header>
       {registeredMembers.map((member => (
         <RegMemberContainer  key={member.id}>
-        <RegisteredMember>{member.name}</RegisteredMember>
+        <RegisteredMember>{member.name ? member.name : member.email}</RegisteredMember>
         <p>{member.email}</p>
         <p>Last active: <TimeAgo timestamp={member.lastSeen}/></p>
         </RegMemberContainer>
@@ -109,6 +109,7 @@ const MembersContainer = styled.div`
 `;
 
 const RegMemberContainer = styled.div`
+  cursor: pointer;
   :hover {
       background-color: #e9eaeb;
     }
