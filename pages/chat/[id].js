@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import styled from 'styled-components';
 import media from '../../styles/media';
-import Sidebar from '../../components/sidebar';
+import Sidebar from '../../components/Sidebar';
 import ChatScreen from '../../components/ChatScreen';
 import Members from '../../components/Members';
 import{ 
