@@ -104,7 +104,6 @@ const MembersContainer = styled.div`
   display: none;
   ${media.tablet`
     display: block;
-    
   `}
 `;
 
@@ -122,40 +121,29 @@ const RegMemberContainer = styled.div`
 `;
 
 const RegisteredMember = styled.div`
-  display: none;
-  ${media.tablet`
-    display: flex;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    color: green;
-  `}
+  display: flex;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: green;
 `;
 
 
 
 const UnregisteredMember = styled.div`
-display: none;
-  ${media.tablet`
-    display: flex;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    color: red;
-    :hover {
-      background-color: #e9eaeb;
-    }
-    `
+  display: flex;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: red;
+  :hover {
+    background-color: #e9eaeb;
   }
 `;
-const Breaker = styled.p`
-display: none;
-  ${media.tablet`
-    background-color: whitesmoke;
-    display: flex;
-    border-top: 2px solid whitesmoke;
-    border-bottom: 2px solid whitesmoke;
-    padding: 1rem
-    `
-  }
+const Breaker = styled.div`
+  background-color: whitesmoke;
+  display: flex;
+  border-top: 2px solid whitesmoke;
+  border-bottom: 2px solid whitesmoke;
+  padding: 1rem
 `;
 
 const isRegistered = async (member) => {

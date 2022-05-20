@@ -20,34 +20,45 @@ import ChatMembers from '../components/ChatMembers';
 
 
 function Chat({ id, emails}) {
+  
+
   const router = useRouter();
   const enterChat = () => {
     router.push(`/chat/${id}`);
   }
+  const ChatSelected = id === router.query.id ? SelectedChat : Container;
+
 
   return (
-    <Container key={id} onClick={enterChat}>
+    <ChatSelected key={id} onClick={enterChat}>
       <ChatHeads emails={emails} />
       <ChatMembers emails={emails}  id={id} />
-    </Container>
+    </ChatSelected>
   );
 }
 
 export default Chat;
 
 const Container = styled.div`
-
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 15px;
-    word-break: break-word;
-
-    :hover {
-      background-color: #e9eaeb;
-    }
-
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  word-break: break-word;
+  :hover {
+    background-color: #e9eaeb;
+  }
 `;
+
+const SelectedChat = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  word-break: break-word;
+  background-color: #e9eaeb;
+`;
+
 
 const UserAvatar = styled(Avatar)`
 

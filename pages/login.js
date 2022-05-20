@@ -11,11 +11,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibilityTwoToneIcon from "@material-ui/icons/VisibilityTwoTone";
 import VisibilityOffTwoToneIcon from "@material-ui/icons/VisibilityOffTwoTone";
 import CloseIcon from "@material-ui/icons/Close";
-import {
-  logInWithEmailAndPassword,
-  signInWithGoogle,
-  registerWithEmailAndPassword,
-} from "../firebase";
+
 import { Context } from '../context';
 
 
@@ -29,8 +25,6 @@ function Login() {
     signInWithEmailAndPassword,
     signInWithPopup,
     googleProvider,
-    signOut,
-    onAuthStateChanged,
     auth
   } = useContext(Context);
   const [hidePassword, setHidePassword] = useState(true);

@@ -69,7 +69,7 @@ const MembersContainer = styled.div`
   `}
 
 `;
-const RegisteredMember = styled.p`
+const RegisteredMember = styled.div`
 
   display: block;
   margin-right: 0.5rem;
@@ -81,7 +81,7 @@ const RegisteredMember = styled.p`
 
 
 `;
-const UnregisteredMember = styled.p`
+const UnregisteredMember = styled.div`
 
   display: block;
   margin-right: 0.5rem;
